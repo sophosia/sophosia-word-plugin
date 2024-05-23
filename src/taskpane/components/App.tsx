@@ -1,40 +1,47 @@
 import { makeStyles } from "@fluentui/react-components";
-import { DocumentTextRegular } from "@fluentui/react-icons";
 import * as React from "react";
-import { insertText } from "../taskpane";
-import ReferenceList, { ReferenceListItem } from "./ReferenceList";
-import TextInsertion from "./TextInsertion";
-
-interface AppProps {
-  title: string;
-}
+import { useState } from "react";
+import ReferenceList, { Reference } from "./ReferenceList";
+import SearchBar from "./SearchBar";
 
 const useStyles = makeStyles({
   root: {
     minHeight: "100vh",
+    marginTop: "1rem",
+    marginLeft: "1rem",
+    marginRight: "1rem",
   },
 });
 
-const App: React.FC<AppProps> = (props: AppProps) => {
-  console.log("props", props);
+const App: React.FC = () => {
   const styles = useStyles();
   // The list items are static and won't change at runtime,
   // so this should be an ordinary const, not a part of state.
-  const listItems: ReferenceListItem[] = [
+  const references: Reference[] = [
     {
-      icon: <DocumentTextRegular />,
-      primaryText: "Reference 1",
+      "citation-key": "family1_family2_test_2024",
+      title: "A Test Reference",
+      author: [
+        { family: "Family1", given: "Given1" },
+        { family: "Family2", given: "Given2" },
+      ],
     },
     {
-      icon: <DocumentTextRegular />,
-      primaryText: "Reference 2",
+      "citation-key": "feng_smolyakov_instability_2024",
+      title: "Instability of Plasma Flow in Magnetic Nozzle",
+      author: [
+        { family: "Feng", given: "Hunt" },
+        { family: "Smolyakov", given: "Andrei" },
+      ],
     },
   ];
 
+  const [searchKey, setSearchKey] = useState<string>("");
+
   return (
     <div className={styles.root}>
-      <TextInsertion insertText={insertText} />
-      <ReferenceList items={listItems} />
+      <SearchBar searchKey={searchKey} setSearchKey={(key) => setSearchKey(key)} />
+      <ReferenceList searchKey={searchKey} items={references} />
     </div>
   );
 };
